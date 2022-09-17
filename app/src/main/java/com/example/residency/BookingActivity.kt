@@ -15,9 +15,8 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_booking.*
 import java.text.ParseException
 import java.text.SimpleDateFormat
-import java.time.*
+import java.time.LocalTime
 import java.time.format.DateTimeFormatter
-import java.time.temporal.ChronoUnit
 import java.util.*
 import kotlin.math.abs
 
@@ -95,7 +94,7 @@ class BookingActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener,
             val minute = calendar.get(Calendar.MINUTE)
             val timePickerDialog = TimePickerDialog(
                 this, this, hour, minute,
-            DateFormat.is24HourFormat(this)
+                DateFormat.is24HourFormat(this)
             )
 //            ,
 //            DateFormat.is24HourFormat(this)
@@ -103,7 +102,7 @@ class BookingActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener,
         }
 
         btn_booking.setOnClickListener {
-            Log.e("facility", "clicks: $facility" )
+            Log.e("facility", "clicks: $facility")
             checkValidation()
         }
     }
@@ -115,10 +114,10 @@ class BookingActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener,
                     if (date == data.date) {
                         if (compareTime(data.startTime, data.endTime)) {
 //                            break
-                            if (futureTime){
+                            if (futureTime) {
                                 diffTime()
                                 confirmDialog()
-                            }else{
+                            } else {
                                 Snackbar.make(
                                     cl_parent,
                                     "Pick Actual time!",
@@ -132,11 +131,11 @@ class BookingActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener,
                                 Snackbar.LENGTH_SHORT
                             ).show()
                         }
-                    }else{
-                        if (futureTime){
+                    } else {
+                        if (futureTime) {
                             diffTime()
                             confirmDialog()
-                        }else{
+                        } else {
                             Snackbar.make(
                                 cl_parent,
                                 "Pick Actual time!",
@@ -145,11 +144,11 @@ class BookingActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener,
                         }
                     }
 //                break
-                }else{
-                    if (futureTime){
+                } else {
+                    if (futureTime) {
                         diffTime()
                         confirmDialog()
-                    }else{
+                    } else {
                         Snackbar.make(
                             cl_parent,
                             "Pick Actual time!",
@@ -163,11 +162,11 @@ class BookingActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener,
 ////        facility!!.add(Facility(type = selectedType,date = date, startTime = fromTime, endTime = toTime))
 //
 //            confirmDialog()
-        }else{
-            if (futureTime){
+        } else {
+            if (futureTime) {
                 diffTime()
                 confirmDialog()
-            }else{
+            } else {
                 Snackbar.make(
                     cl_parent,
                     "Pick Actual time!",
@@ -190,11 +189,11 @@ class BookingActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener,
             type_spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
                     selectedType = type[p2]
-                    if (selectedType == "Clubhouse"){
+                    if (selectedType == "Clubhouse") {
                         clubhouse_1.visibility = View.VISIBLE
                         clubhouse_2.visibility = View.VISIBLE
                         tennis.visibility = View.GONE
-                    }else{
+                    } else {
                         clubhouse_1.visibility = View.GONE
                         clubhouse_2.visibility = View.GONE
                         tennis.visibility = View.VISIBLE
@@ -214,7 +213,7 @@ class BookingActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener,
     }
 
     override fun onTimeSet(p0: TimePicker?, p1: Int, p2: Int) {
-        Log.e("Time", "onTimeSet: $p1:$p2" )
+        Log.e("Time", "onTimeSet: $p1:$p2")
         var AM_PM = ""
         val hour = if (p1 == 0) 12 else p1
 
@@ -231,74 +230,37 @@ class BookingActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener,
         if (date == "") {
             date = "$year ${month + 1} $day"
         }
-            if (date == "$year ${month + 1} $day"){
-                Log.e("Date", "onTimeSet: $year ${month + 1} $day" )
-                Log.e("Date", "onTimeSet: $year ${month + 1} $day" )
+        Log.e("Date", "onTimeSet: $year ${month + 1} $day")
+        Log.e("Date", "onTimeSet: $date")
+        if (date == "$year ${month + 1} $day") {
+            Log.e("Date", "onTimeSet: $year ${month + 1} $day")
+            Log.e("Date", "onTimeSet: $year ${month + 1} $day")
 
-                if (datetime.getTimeInMillis() >= c.getTimeInMillis()) {
-                    futureTime = true
-                    if (fromSelected){
-                        AM_PM = if (p1 >=0 && p1 < 12){
-                            "AM";
-                        } else {
-                            "PM";
-                        }
-                        fromTime = "$hour:$p2 $AM_PM"
-//            fromTimeAMPM = "$hour:$p2 $AM_PM".toInt()
-                        fromTimeDiff = "${if (hour.toString().length == 1) "0$hour" else hour}:${if (p2.toString().length == 1) "0$p2" else p2}"
-//            fromTimeDiff = "${if (hour > 12) hour%12 else hour}:${if (p2.toString().length == 1) "0$p2" else p2}"
-//            fromTimeDiff = "$hour:$p2"
-                        tv_timeFrom.text = "$hour:$p2 $AM_PM"
-                    }else{
-                        AM_PM = if (p1 >=0 && p1 < 12){
-                            "AM";
-                        } else {
-                            "PM";
-                        }
-                        toTime = "$hour:$p2 $AM_PM"
-//            toTimeAMPM = "$hour:$p2 $AM_PM".toInt()
-                        toTimeDiff = "${if (hour.toString().length == 1) "0$hour" else hour}:${if (p2.toString().length == 1) "0$p2" else p2}"
-//            toTimeDiff = "${if (hour > 12) hour%12 else hour}:${if (p2.toString().length == 1) "0$p2" else p2}"
-//            toTimeDiff = "$hour:$p2"
-                        tv_timeTo.text = "$hour:$p2 $AM_PM"
-                    }
-
-                    if (fromTime == toTime) {
-                        futureTime = false
-                    }
-                }else{
-                    futureTime = false
-                    Snackbar.make(
-                        cl_parent,
-                        "Pick Actual time!",
-                        Snackbar.LENGTH_SHORT
-                    ).show()
-                }
-
-            }else{
-                Log.e("Else", "onTimeSet: Date" )
+            if (datetime.getTimeInMillis() >= c.getTimeInMillis()) {
                 futureTime = true
-                if (fromSelected){
-                    AM_PM = if (p1 >=0 && p1 < 12){
+                if (fromSelected) {
+                    AM_PM = if (p1 >= 0 && p1 < 12) {
                         "AM";
                     } else {
                         "PM";
                     }
                     fromTime = "$hour:$p2 $AM_PM"
 //            fromTimeAMPM = "$hour:$p2 $AM_PM".toInt()
-                    fromTimeDiff = "${if (hour.toString().length == 1) "0$hour" else hour}:${if (p2.toString().length == 1) "0$p2" else p2}"
+                    fromTimeDiff =
+                        "${if (hour.toString().length == 1) "0$hour" else hour}:${if (p2.toString().length == 1) "0$p2" else p2}"
 //            fromTimeDiff = "${if (hour > 12) hour%12 else hour}:${if (p2.toString().length == 1) "0$p2" else p2}"
 //            fromTimeDiff = "$hour:$p2"
                     tv_timeFrom.text = "$hour:$p2 $AM_PM"
-                }else{
-                    AM_PM = if (p1 >=0 && p1 < 12){
+                } else {
+                    AM_PM = if (p1 >= 0 && p1 < 12) {
                         "AM";
                     } else {
                         "PM";
                     }
                     toTime = "$hour:$p2 $AM_PM"
 //            toTimeAMPM = "$hour:$p2 $AM_PM".toInt()
-                    toTimeDiff = "${if (hour.toString().length == 1) "0$hour" else hour}:${if (p2.toString().length == 1) "0$p2" else p2}"
+                    toTimeDiff =
+                        "${if (hour.toString().length == 1) "0$hour" else hour}:${if (p2.toString().length == 1) "0$p2" else p2}"
 //            toTimeDiff = "${if (hour > 12) hour%12 else hour}:${if (p2.toString().length == 1) "0$p2" else p2}"
 //            toTimeDiff = "$hour:$p2"
                     tv_timeTo.text = "$hour:$p2 $AM_PM"
@@ -307,49 +269,173 @@ class BookingActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener,
                 if (fromTime == toTime) {
                     futureTime = false
                 }
+            } else {
+                futureTime = false
+                Snackbar.make(
+                    cl_parent,
+                    "Pick Actual time!",
+                    Snackbar.LENGTH_SHORT
+                ).show()
             }
+
+        } else {
+            Log.e("Else", "onTimeSet: Date")
+            futureTime = true
+            if (fromSelected) {
+                AM_PM = if (p1 >= 0 && p1 < 12) {
+                    "AM";
+                } else {
+                    "PM";
+                }
+//                    fromTime = "$hour:$p2 $AM_PM"
+                fromTime =
+                    "${if (hour.toString().length == 1) "0$hour" else hour}:${if (p2.toString().length == 1) "0$p2" else p2} $AM_PM"
+//            fromTimeAMPM = "$hour:$p2 $AM_PM".toInt()
+                fromTimeDiff =
+                    "${if (hour.toString().length == 1) "0$hour" else hour}:${if (p2.toString().length == 1) "0$p2" else p2}"
+//            fromTimeDiff = "${if (hour > 12) hour%12 else hour}:${if (p2.toString().length == 1) "0$p2" else p2}"
+//            fromTimeDiff = "$hour:$p2"
+                tv_timeFrom.text = "$hour:$p2 $AM_PM"
+            } else {
+                AM_PM = if (p1 >= 0 && p1 < 12) {
+                    "AM";
+                } else {
+                    "PM";
+                }
+//                    toTime = "$hour:$p2 $AM_PM"
+                toTime =
+                    "${if (hour.toString().length == 1) "0$hour" else hour}:${if (p2.toString().length == 1) "0$p2" else p2} $AM_PM"
+//            toTimeAMPM = "$hour:$p2 $AM_PM".toInt()
+                toTimeDiff =
+                    "${if (hour.toString().length == 1) "0$hour" else hour}:${if (p2.toString().length == 1) "0$p2" else p2}"
+//            toTimeDiff = "${if (hour > 12) hour%12 else hour}:${if (p2.toString().length == 1) "0$p2" else p2}"
+//            toTimeDiff = "$hour:$p2"
+                tv_timeTo.text = "$hour:$p2 $AM_PM"
+            }
+
+            if (fromTime == toTime) {
+                futureTime = false
+            }
+        }
 
     }
 
-    private fun compareTime(startTime: String?, endTime: String?): Boolean{
+    private fun compareTime(startTime: String?, endTime: String?): Boolean {
         try {
-            val simpleDateFormat = SimpleDateFormat("hh:mm a")
-            val startime = simpleDateFormat.parse(startTime)
-            val endtime = simpleDateFormat.parse(endTime)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm a", Locale.US)
 
-            val selected_start_time = simpleDateFormat.parse(fromTime)
-            val selected_end_time = simpleDateFormat.parse(toTime)
-            return if (fromTime.equals(startTime) && toTime.equals(endTime)){
-                println("No")
-                false
-            }
-            else if (selected_start_time.after(startime) && selected_start_time.before(endtime)) {
-                println("No")
-                false
-            }
-                else if (selected_end_time.after(startime) && selected_end_time.before(endtime)){
-                println("No")
-                false
-            }
+                val startime = LocalTime.parse(startTime, formatter)
+                val endtime = LocalTime.parse(endTime, formatter)
+
+                val selected_start_time = LocalTime.parse(fromTime, formatter)
+                val selected_end_time = LocalTime.parse(toTime, formatter)
+
+//                 val calendarStartTime = Calendar.getInstance()
+//                 calendarStartTime.time = startime
+//
+//                 val calendarEndTime = Calendar.getInstance()
+//                 calendarEndTime.time = endtime
+//
+//                 val calendarSelectStartTime = Calendar.getInstance()
+//                 calendarSelectStartTime.time = selected_start_time
+//                 calendarSelectStartTime.add(Calendar.DATE,1)
+//
+//                 val calendarSelectEndTime = Calendar.getInstance()
+//                 calendarSelectEndTime.time = selected_end_time
+
+                if (fromTime.equals(startTime) && toTime.equals(endTime)) {
+                    println("Equal No")
+                    return false
+                } else if (selected_start_time.isAfter(startime) && selected_start_time.isBefore(
+                        endtime
+                    )
+                ) {
+                    println("Start to start No ${selected_start_time} , ${startime}  Start to end No ${selected_start_time},${endtime}")
+                    return false
+                }
+//                 else if (startime.isAfter(selected_start_time)){
+//                     println("Start to end No ${selected_start_time},${endtime}")
+//                     return false
+//                 }
+                else if (selected_end_time.isAfter(startime) && selected_end_time.isBefore(endtime)) {
+                    println("End No")
+                    return false
+                } else if (startime.isAfter(selected_start_time) && startime.isBefore(
+                        selected_end_time
+                    )
+                ) {
+                    println("End reverse No Select End:$selected_end_time Select start:$selected_start_time Start: $startime End:$endtime")
+                    return false
+                } else if (endtime.isAfter(selected_start_time) && endtime.isBefore(selected_end_time)) {
+                    println("sts reverse No")
+                    return false
+                } else if (selected_start_time == startime && selected_end_time == endtime) {
+                    println("Equals Date No")
+                    return false
+                }
 //            else if ((selected_end_time.after(startime) && selected_end_time.after(endtime)) && (selected_end_time.after(startime) && selected_end_time.after(endtime))) {
 //            else if (selected_start_time == selected_end_time) {
 //                println("No")
 //                false
 //            }
-            else {
-                println("Yes")
-                true
+                else {
+                    println("Yes")
+                    return true
+                }
+            } else {
+                val simpleDateFormat = SimpleDateFormat("HH:mm a", Locale.US)
+                val startime = simpleDateFormat.parse(startTime)
+                val endtime = simpleDateFormat.parse(endTime)
+
+                val selected_start_time = simpleDateFormat.parse(fromTime)
+                val selected_end_time = simpleDateFormat.parse(toTime)
+
+                val calendarStartTime = Calendar.getInstance()
+                calendarStartTime.time = startime
+
+                val calendarEndTime = Calendar.getInstance()
+                calendarEndTime.time = endtime
+
+                val calendarSelectStartTime = Calendar.getInstance()
+                calendarSelectStartTime.time = selected_start_time
+                calendarSelectStartTime.add(Calendar.DATE, 1)
+
+                val calendarSelectEndTime = Calendar.getInstance()
+                calendarSelectEndTime.time = selected_end_time
+
+                if (fromTime.equals(startTime) && toTime.equals(endTime)) {
+                    println("Equal No")
+                    return false
+                } else if (calendarSelectStartTime.time.after(calendarStartTime.time)) {
+                    println("Start to start No ${calendarSelectStartTime.time} , ${calendarStartTime.time}")
+                    return false
+                } else if (calendarSelectStartTime.time.before(calendarEndTime.time)) {
+                    println("Start to end No ${calendarSelectStartTime.time},${calendarEndTime.time}")
+                    return false
+                } else if (selected_end_time.after(startime) && selected_end_time.before(endtime)) {
+                    println("End No")
+                    return false
+                }
+//            else if ((selected_end_time.after(startime) && selected_end_time.after(endtime)) && (selected_end_time.after(startime) && selected_end_time.after(endtime))) {
+//            else if (selected_start_time == selected_end_time) {
+//                println("No")
+//                false
+//            }
+                else {
+                    println("Yes")
+                    return true
+                }
             }
+
         } catch (e: ParseException) {
             e.printStackTrace()
         }
         return false
     }
 
-    private fun diffTime(){
-        val dateFormat = SimpleDateFormat(
-            "H:mm"
-        )
+    private fun diffTime() {
+        val dateFormat = SimpleDateFormat("H:mm")
         try {
 
 
@@ -374,11 +460,11 @@ class BookingActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener,
 //                 val localDate2: LocalDateTime = LocalDate.parse(toTimeDiff,formatter).atStartOfDay()
 //
 //                 val hours = ChronoUnit.HOURS.between(localDate1,localDate2)
-////                 val hours = ChronoUnit.HOURS.between(ZonedDateTime.of(LocalDateTime.parse( fromTimeDiff ),
-////                     ZoneId.of( "America/Montreal" )),
-////                     ZonedDateTime.of(LocalDateTime.parse( toTimeDiff ),
-////                         ZoneId.of( "America/Montreal" ))
-////                 )
+//                 val hours = ChronoUnit.HOURS.between(ZonedDateTime.of(LocalDateTime.parse( fromTimeDiff ),
+//                     ZoneId.of( "America/Montreal" )),
+//                     ZonedDateTime.of(LocalDateTime.parse( toTimeDiff ),
+//                         ZoneId.of( "America/Montreal" ))
+//                 )
 //                 val min = ChronoUnit.MINUTES.between(localDate1,localDate2)
 //
 //                 Log.e(
@@ -389,7 +475,6 @@ class BookingActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener,
 //            } else {
 //
 //            }
-
 
 
             differenceHours = differenceInHours.toInt()
@@ -405,9 +490,9 @@ class BookingActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener,
     }
 
 
-    private fun confirmDialog(){
+    private fun confirmDialog() {
         val builder = AlertDialog.Builder(this).create()
-        val view = layoutInflater.inflate(R.layout.layout_confirm_order,null)
+        val view = layoutInflater.inflate(R.layout.layout_confirm_order, null)
         builder.setView(view)
         val type = view.findViewById<TextView>(R.id.tv_type)
         val selectedDate = view.findViewById<TextView>(R.id.tv_date)
@@ -424,32 +509,32 @@ class BookingActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener,
         selectedTime.text = "Selected Time: $fromTime to $toTime"
         hours.text = "Total Hours- $differenceHours : $differenceMinutes"
 
-        if (selectedType == "Clubhouse"){
-            if (fromTime.contains("PM") && toTime.contains("PM")){
+        if (selectedType == "Clubhouse") {
+            if (fromTime.contains("PM") && toTime.contains("PM")) {
                 price = 500
-                if (differenceHours > 0){
+                if (differenceHours > 0) {
                     grantTotal = (price * differenceHours).toDouble()
                 }
-                if (differenceMinutes > 0){
+                if (differenceMinutes > 0) {
                     val minPrice = 8.3
                     grantTotal = grantTotal.plus(minPrice * differenceMinutes)
                 }
-            }else{
+            } else {
                 price = 100
-                if (differenceHours > 0){
+                if (differenceHours > 0) {
                     grantTotal = (price * differenceHours).toDouble()
                 }
-                if (differenceMinutes > 0){
+                if (differenceMinutes > 0) {
                     val minPrice = 1.6
                     grantTotal = grantTotal.plus(minPrice * differenceMinutes)
                 }
             }
-        }else{
+        } else {
             price = 50
-            if (differenceHours > 0){
+            if (differenceHours > 0) {
                 grantTotal = (price * differenceHours).toDouble()
             }
-            if (differenceMinutes > 0){
+            if (differenceMinutes > 0) {
                 val minPrice = 0.8
                 grantTotal = grantTotal.plus(minPrice * differenceMinutes)
             }
@@ -458,11 +543,19 @@ class BookingActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener,
         total.text = "Total: Rs. ${grantTotal.toString()}"
 
         confirmBooking.setOnClickListener {
-            facility!!.add(Facility(type = selectedType,date = date, startTime = fromTime, endTime = toTime, total = grantTotal.toString()))
-            Log.e("facility", "clicks: $facility" )
+            facility!!.add(
+                Facility(
+                    type = selectedType,
+                    date = date,
+                    startTime = fromTime,
+                    endTime = toTime,
+                    total = grantTotal.toString()
+                )
+            )
+            Log.e("facility", "clicks: $facility")
             val intent = Intent()
-            intent.putParcelableArrayListExtra("facility",facility)
-            setResult(RESULT_OK,intent)
+            intent.putParcelableArrayListExtra("facility", facility)
+            setResult(RESULT_OK, intent)
             builder.dismiss()
             this.finish()
         }
